@@ -153,7 +153,7 @@ def collect():
         seen_sources.add(it["source"])
         seen_links.add(it["link"])
     # Second pass: fill remaining slots regardless of source repeats.
-    if len(picked) < TARGET_MIN:
+    if len(picked) < TARGET_MAX:
         for it in pool:
             if len(picked) >= TARGET_MAX:
                 break
@@ -208,7 +208,7 @@ PAGE_TMPL = """<!doctype html>
   <div class="sub">{count} low-level vulnerability writeups &middot; generated {generated}</div>
 </header>
 {cards}
-<footer>Sources: Project Zero, ZDI, ret2, GHSL, Exodus, NCC Group, Trail of Bits, willsroot, a13xp0p0v, Phrack, Google Security Blog.<br>Auto-generated daily. <a href="https://github.com/obamas-lastname/vuln-digest">source</a></footer>
+<footer>Sources: {sources}.<br>Auto-generated daily. <a href="https://github.com/obamas-lastname/vuln-digest">source</a></footer>
 </body>
 </html>
 """
@@ -241,6 +241,7 @@ def render(items):
         count=len(items),
         generated=now.strftime("%Y-%m-%d %H:%M UTC"),
         cards="\n".join(cards) if cards else "<p>No fresh writeups found today.</p>",
+        sources=html.escape(", ".join(name for name, _ in FEEDS)),
     )
     return page
 
